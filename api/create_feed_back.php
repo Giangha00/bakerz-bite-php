@@ -6,19 +6,36 @@ header("Access-Control-Allow-Headers: *");
 
 $data = json_decode(file_get_contents("php://input"), true);
 $feedback = $data["feedback"] ?? null;
-$name = $feedback["name"];
-$email = $feedback["email"];
-$message = $feedback["message"];
-$rate = $feedback["rate"];
+$name = $feedback["name"] ?? null;
+$email = $feedback["email"] ?? null;
+$rate = $feedback["rate"] ?? null;
+$message = $feedback["message"] ?? null;
+
 
 require_once("../db/connect.php");
 
-$c_insert_sql = "INSERT INTO feedback(name, email, message, rate) VALUES('$name', '$email', '$message', '$rate')";
-$feedback_id = insert($c_insert_sql);
-
-$data = [
-    "status" => true,
-    "message" => "Success",
-];
-
+$conn = connect();
+$stmt = $conn->prepare("INSERT INTO feedback (name, email, rate, message) VALUES (?, ?, ?, ?)");
+if (!$stmt) {
+    $data = [
+        "status" => false,
+        "message" => "Prepare failed: " . $conn->error,
+    ];
+    echo json_encode($data);
+    exit;
+}
+$stmt->bind_param("ssis", $name, $email, $rate, $message);
+if ($stmt->execute()) {
+    $data = [
+        "status" => true,
+        "message" => "Success",
+    ];
+} else {
+    $data = [
+        "status" => false,
+        "message" => "Insert failed: " . $stmt->error,
+    ];
+}
+$stmt->close();
+$conn->close();
 echo json_encode($data);
