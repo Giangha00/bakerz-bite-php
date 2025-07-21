@@ -28,7 +28,7 @@ foreach($cart as $item){
     $product_id = $item["id"];
     $qty = $item["buyQty"];
     $price = $item["price"];
-    $op_insert_sql = "insert into order_products(order_id, product_id, qty, price) values('$order_id', '$product_id', '$qty', '$price')";
+    $op_insert_sql = "insert into order_items(order_id, product_id, qty, price) values('$order_id', '$product_id', '$qty', '$price')";
     insert($op_insert_sql);
 };
 
