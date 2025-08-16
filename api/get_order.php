@@ -18,7 +18,7 @@ if (!$order_id) {
 $sql = "
 SELECT 
   o.id,
-  o.order_date,
+  o.created_at AS order_date,
   o.grand_total,
   c.name AS customer_name,
   c.email AS customer_email,
