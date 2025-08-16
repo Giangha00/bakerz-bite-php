@@ -9,9 +9,11 @@ require_once("../db/connect.php");
 $sql = "
 SELECT 
     o.*,
-    (SELECT name FROM order_items WHERE order_id = o.id LIMIT 1) AS name
+    c.name AS customer_name
 FROM orders o
+JOIN customers c ON o.customer_id = c.id
 ";
+
 
 $rs = query($sql);
 $list = [];

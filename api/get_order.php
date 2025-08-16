@@ -20,18 +20,19 @@ SELECT
   o.id,
   o.order_date,
   o.grand_total,
-  i.name as customer_name,
-  i.email as customer_email,
-  i.telephone as customer_telephone,
-  i.address as customer_address,
+  c.name AS customer_name,
+  c.email AS customer_email,
+  c.telephone AS customer_telephone,
+  c.address AS customer_address,
   o.status AS order_status,
-  p.id as product_id,
-  i.qty as quantity,
-  p.name as product_name,
-  p.price as product_price
+  p.id AS product_id,
+  oi.qty AS quantity,
+  p.name AS product_name,
+  p.price AS product_price
 FROM orders o
-JOIN order_items i ON o.id = i.order_id
-JOIN products p ON i.product_id = p.id
+JOIN customers c ON o.customer_id = c.id
+JOIN order_items oi ON o.id = oi.order_id
+JOIN products p ON oi.product_id = p.id
 WHERE o.id = ?
 ";
 
