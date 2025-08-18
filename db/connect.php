@@ -28,8 +28,18 @@ function query($sql){
 }
 
 // Thêm khách hàng
+// function insert($sql){
+//     $conn = connect();
+//     $conn->query($sql);
+//     return $conn->insert_id;
+// }
+
 function insert($sql){
     $conn = connect();
-    $conn->query($sql);
-    return $conn->insert_id;
+    if ($conn->query($sql) === TRUE) {
+        return $conn->insert_id;
+    } else {
+        error_log("Insert failed: " . $conn->error); // log lỗi
+        return false;
+    }
 }

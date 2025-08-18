@@ -1,37 +1,22 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Headers: Content-Type");
 
 require_once("../db/connect.php");
 
-$data = json_decode(file_get_contents("php://input"), true);
-$order_id = $data["order_id"] ?? null;
-$status   = $data["status"] ?? null;
+$order_id = $_POST["order_id"] ?? null;
+$status   = $_POST["status"] ?? null;
 
-if (!$order_id || !$status) {
-    echo json_encode([
-        "status" => false,
-        "message" => "Missing order_id or status"
-    ]);
-    exit;
-}
+if ($order_id && $status) {
+    $sql = "UPDATE orders SET status = '$status' WHERE id = '$order_id'";
+    $result = query($sql);
 
-$conn = connect();
-$stmt = $conn->prepare("UPDATE orders SET status = ? WHERE id = ?");
-$stmt->bind_param("si", $status, $order_id);
-
-if ($stmt->execute()) {
-    echo json_encode([
-        "status" => true,
-        "message" => "Order status updated successfully"
-    ]);
+    if ($result) {
+        echo json_encode(["status" => true, "message" => "Order updated"]);
+    } else {
+        echo json_encode(["status" => false, "message" => "Update failed"]);
+    }
 } else {
-    echo json_encode([
-        "status" => false,
-        "message" => "Failed to update: " . $stmt->error
-    ]);
+    echo json_encode(["status" => false, "message" => "Invalid data"]);
 }
-
-$stmt->close();
-$conn->close();
