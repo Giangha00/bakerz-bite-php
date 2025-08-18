@@ -15,8 +15,6 @@ $description = mysqli_real_escape_string($conn, $data["description"] ?? "");
 $qty         = (int)($data["qty"] ?? 0);
 $thumbnail   = mysqli_real_escape_string($conn, $data["thumbnail"] ?? "");
 $price       = (float)($data["price"] ?? 0);
-// $images      = mysqli_real_escape_string($conn, json_encode($data["images"] ?? []));
-// $ingredients = mysqli_real_escape_string($conn, json_encode($data["ingredients"] ?? []));
 $images_raw = $data["images"] ?? [];
 if (is_string($images_raw)) {
     $images_raw = json_decode($images_raw, true);
@@ -40,7 +38,6 @@ if (empty($name) || $price <= 0 || $qty <= 0) {
     exit;
 }
 
-error_log("👉 RUN SQL: $sql");
 
 $result = insert($sql);
 
