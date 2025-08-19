@@ -9,7 +9,8 @@ require_once("../db/connect.php");
 $sql = "
 SELECT 
     o.*,
-    c.name AS customer_name
+    c.name AS customer_name,
+    c.telephone AS customer_telephone
 FROM orders o
 JOIN customers c ON o.customer_id = c.id
 ";
