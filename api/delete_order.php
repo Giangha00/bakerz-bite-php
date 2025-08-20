@@ -22,12 +22,12 @@ $result = query($dl_order);
 
 
 if ($result && $result_items) {
-    // Lấy id lớn nhất còn lại
+    
     $res = query("SELECT MAX(id) AS max_id FROM orders");
     $row = $res->fetch_assoc();
     $next_id = $row['max_id'] ? $row['max_id'] + 1 : 1;
 
-    // Reset AUTO_INCREMENT
+    
     query("ALTER TABLE orders AUTO_INCREMENT = $next_id");
 
     echo json_encode([
